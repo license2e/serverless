@@ -15,8 +15,20 @@ dependencies {
     //AWS Lambda core library
     compile 'com.amazonaws:aws-lambda-java-core:1.1.0'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.7.4'
+    compile fileTree(dir: 'jars', include: '*.jar')
 }
 
-//task wrapper(type: Wrapper) {
-//    gradleVersion = '2.14'
-//}
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.14'
+}
+
+task buildSync(type: Sync) {
+    destinationDir = new File('build/distributions')
+    from compileJava
+    from processResources
+    into('lib') {
+        from configurations.runtime
+    }
+}
+
+build.dependsOn buildSync
